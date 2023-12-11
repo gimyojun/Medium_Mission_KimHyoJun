@@ -4,6 +4,7 @@ import com.ll.medium.domain.member.member.form.MemberCreateForm;
 import com.ll.medium.domain.member.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,15 @@ public class MemberController {
                     "2개의 패스워드가 일치하지 않습니다.");
             return "domain/member/join";
         }
-        memberService.create(memberCreateForm.getUsername(),memberCreateForm.getPassword1());
+        try{
+            memberService.create(memberCreateForm.getUsername(),memberCreateForm.getPassword1());
+        }catch(DataIntegrityViolationException e){
+            e.printStackTrace();
+            bindingResult.reject("signupFailed", "이미 사용중인 id입니다.");
+            return "domain/member/join";
+
+        }
+
 
         return "redirect:/";
     }
