@@ -45,4 +45,9 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.questionRepository.findAll(pageable);
     }
+
+    public List<Question> getHomeList(){
+        return questionRepository.findTop30ByOrderByCreateDateDesc();
+    }
+
 }
