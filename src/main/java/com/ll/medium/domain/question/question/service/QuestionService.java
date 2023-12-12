@@ -1,5 +1,6 @@
 package com.ll.medium.domain.question.question.service;
 
+import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.question.question.entity.Question;
 import com.ll.medium.domain.question.question.repository.QuestionRepository;
 import com.ll.medium.global.exception.DataNotFoundException;
@@ -30,11 +31,12 @@ public class QuestionService {
             throw new DataNotFoundException(" No Question Found with Id: ");
         }
     }
-    public void saveQuestion(String content, String subject){
+    public void saveQuestion(String content, String subject, Member member){
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
+        question.setAuthor(member);
         this.questionRepository.save(question);
     }
     public Page<Question> getList(int page){

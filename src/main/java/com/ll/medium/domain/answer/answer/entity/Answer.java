@@ -1,5 +1,6 @@
 package com.ll.medium.domain.answer.answer.entity;
 
+import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.question.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,4 +24,7 @@ public class Answer {
 
     @ManyToOne
     private Question question;
+
+    @ManyToOne
+    private Member author;
 }

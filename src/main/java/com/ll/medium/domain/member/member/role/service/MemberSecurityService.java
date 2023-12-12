@@ -1,6 +1,6 @@
-package com.ll.medium.domain.member.member.service;
+package com.ll.medium.domain.member.member.role.service;
 
-import com.ll.medium.domain.member.member.entity.MemberEntity;
+import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
 import com.ll.medium.domain.member.member.role.UserRole;
 import lombok.AllArgsConstructor;
@@ -24,13 +24,13 @@ public class MemberSecurityService implements UserDetailsService {
     @Override
     //UserDetailsService를 구현하면 해당 메서드를 구현하도록 강제한다
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<MemberEntity> memberObject = memberRepository.findByusername(username);
+        Optional<Member> memberObject = memberRepository.findByUsername(username);
         //member없는 경우
         if(memberObject.isEmpty()){
             throw new UsernameNotFoundException("등록되지 않은 사용자입니다.");
         }
         //있는경우. 로그인시켜야지, 권한 부여
-        MemberEntity member = memberObject.get();
+        Member member = memberObject.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         if("amdin".equals(username)){
