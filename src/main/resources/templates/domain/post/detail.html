@@ -13,6 +13,18 @@
                     <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
             </div>
+            <div class="my-3">
+                <a th:href="@{|/post/${question.id}/modify|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+                   th:text="수정"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/post/${question.id}/delete|}"
+                   class="delete btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+                   th:text="삭제"></a>
+            </div>
+
         </div>
     </div>
     <!-- 답변의 갯수 표시 -->
@@ -30,15 +42,36 @@
                     <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
             </div>
+            <div class="my-3">
+                <a th:href="@{|/answer/${answer.id}/modify|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                   th:text="수정"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/answer/${answer.id}/delete|}"
+                   class="delete btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                   th:text="삭제"></a>
+            </div>
         </div>
     </div>
     <!-- 답변 반복 끝  -->
     <!-- 답변 작성 -->
-    <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerCreateForm}" method="post" class="my-3">
+    <form th:action="@{|/answer/${question.id}/write|}" th:object="${answerCreateForm}" method="post" class="my-3">
         <div th:replace="~{error :: formErrorsFragment}"></div>
         <textarea th:style="${#authorization.expression('isAuthenticated()') ? '' : 'display:none;'}" th:field="*{content}" class="form-control" rows="10"></textarea>
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+</script>
 </html>
 

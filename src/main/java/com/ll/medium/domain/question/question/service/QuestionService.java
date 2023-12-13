@@ -50,4 +50,20 @@ public class QuestionService {
         return questionRepository.findTop30ByOrderByCreateDateDesc();
     }
 
+    public void modifyQuestion(String content, String subject, Question question){
+
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setUpdateDate(LocalDateTime.now());
+        this.questionRepository.save(question);
+    }
+
+    public void deleteQuestion(int id){
+        Optional<Question> question = this.questionRepository.findById(id);
+        if (question.isPresent()) {
+            this.questionRepository.deleteById(id);
+        } else {
+            throw new DataNotFoundException("존재하지 않는 글입니다");
+        }
+    }
 }

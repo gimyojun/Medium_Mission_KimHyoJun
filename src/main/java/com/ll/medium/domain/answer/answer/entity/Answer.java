@@ -27,4 +27,7 @@ public class Answer {
 
     @ManyToOne
     private Member author;
+
+    private LocalDateTime updateDate;
 }
+
