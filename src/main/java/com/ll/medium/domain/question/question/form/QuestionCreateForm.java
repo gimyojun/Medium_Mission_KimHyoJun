@@ -16,4 +16,6 @@ public class QuestionCreateForm {
     @NotEmpty(message = "내용을 입력해주세요")
     private String content;
 
+    private boolean published;  // isPublished 필드 추가
+
 }

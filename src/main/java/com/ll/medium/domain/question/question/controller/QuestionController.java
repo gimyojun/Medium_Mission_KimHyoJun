@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class QuestionController {
             return "domain/post/write";
         }
         Member member =memberService.getMember(principal.getName());
-        this.questionService.saveQuestion(questionCreateForm.getContent(), questionCreateForm.getSubject(),member);
+        this.questionService.saveQuestion(questionCreateForm.getContent(), questionCreateForm.getSubject(),questionCreateForm.isPublished(),member);
         return "redirect:/post/list";
     }
     @PreAuthorize("isAuthenticated()")
@@ -93,6 +94,35 @@ public class QuestionController {
         questionService.deleteQuestion(id);
         return "redirect:/post/list";
     }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/like")
+    public String likeQuestion(@PathVariable Integer id, Principal principal) {
+        Member member = memberService.getMember(principal.getName());
+        questionService.likeQuestion(id, member);
+        return String.format("redirect:/post/%s", id);
+    }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myList")
+    public String ShowMyList(Model model, Principal principal){
+        Member member = memberService.getMember(principal.getName());
+        List<Question> list = this.questionService.getUserQuestionlist(member);
+        model.addAttribute("list", list);
+        return "domain/post/userQuestionList";
+    }
 
-
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/b/{username}")
+    public String ShowUserQuestionList(Model model, @PathVariable String username){
+        Member member = memberService.getMember(username);
+        List<Question> list = this.questionService.getUserQuestionlist(member);
+        model.addAttribute("list", list);
+        return "domain/post/userQuestionList";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/b/{username}/{id}")
+    public String ShowUserQuestionListDetail(Model model, @PathVariable String username, @PathVariable Integer id,AnswerCreateForm answerCreateForm){
+        Question question = this.questionService.getQuestion(id);
+        model.addAttribute("question", question);
+        return "domain/post/userQuestionDetail";
+    }
 }

@@ -18,6 +18,9 @@
                 <li>
                     <a class="nav-link" th:href="@{/post/list}">전체 글</a>
                 </li>
+                <li>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/post/myList}">나의 글</a>
+                </li>
             </ul>
         </div>
     </div>

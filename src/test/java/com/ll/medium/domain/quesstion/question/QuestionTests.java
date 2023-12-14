@@ -1,5 +1,7 @@
 package com.ll.medium.domain.quesstion.question;
 
+import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.role.service.MemberService;
 import com.ll.medium.domain.question.question.repository.QuestionRepository;
 import com.ll.medium.domain.question.question.service.QuestionService;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,10 @@ public class QuestionTests {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    MemberService memberService;
+
 //
 //    @Test
 //    @DisplayName("t1")
@@ -53,12 +59,26 @@ public class QuestionTests {
 //        assertEquals(1, q.getId());
 //    }
     @Test
+    void testJpa1() {
+        for (int i = 1; i <= 300; i++) {
+            memberService.create(String.format("hyojun%d", i), "123");
+        }
+    }
+    @Test
     void testJpa() {
         for (int i = 1; i <= 300; i++) {
             String subject = String.format("테스트 데이터입니다:[%03d]", i);
             String content = "내용무";
-            this.questionService.saveQuestion(content,subject);
+            boolean published = true;
+            if (i%2==0){
+                published = false;
+            }
+            Member member = memberService.getMember(String.format("hyojun%d", i));
+            this.questionService.saveQuestion(content,subject,published,member);
         }
     }
+
+
+
 
 }

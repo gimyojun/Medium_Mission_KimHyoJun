@@ -31,19 +31,22 @@ public class QuestionService {
             throw new DataNotFoundException(" No Question Found with Id: ");
         }
     }
-    public void saveQuestion(String content, String subject, Member member){
+    public void saveQuestion(String content, String subject, boolean published, Member member){
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
         question.setAuthor(member);
+        question.setPublished(published);
         this.questionRepository.save(question);
     }
     public Page<Question> getList(int page){
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return this.questionRepository.findAll(pageable);
+//        return this.questionRepository.findAll(pageable);
+        return this.questionRepository.findByPublishedTrue(pageable);
+
     }
 
     public List<Question> getHomeList(){
@@ -65,5 +68,15 @@ public class QuestionService {
         } else {
             throw new DataNotFoundException("존재하지 않는 글입니다");
         }
+    }
+
+    public void likeQuestion(Integer id, Member member) {
+        Question question = getQuestion(id);
+        question.getVoter().add(member);
+        questionRepository.save(question);
+    }
+
+    public List<Question> getUserQuestionlist(Member member){
+        return questionRepository.findByAuthorAndPublishedTrue(member);
     }
 }

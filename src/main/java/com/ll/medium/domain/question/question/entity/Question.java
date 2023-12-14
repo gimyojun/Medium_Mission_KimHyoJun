@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,5 +33,12 @@ public class Question {
     private Member author;
 
     private LocalDateTime updateDate;
+
+    @ManyToMany
+    private Set<Member> voter;
+
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean published;
+
 
 }
